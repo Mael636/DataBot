@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataBot - Plateforme de Bots Discord</title>
+    <meta name="description" content="DataBot - Partagez et découvrez des bots Discord avec votre communauté">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="logo-icon">🤖</span>
+                <span class="logo-text">DataBot</span>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="#" class="nav-link active" data-page="home">
+                    <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor">
+                        <path
+                            d="M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Z" />
+                    </svg>
+                    Accueil
+                </a>
+                <a href="#" class="nav-link" data-page="explore">
+                    <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor">
+                        <path
+                            d="M10.68 11.74a6 6 0 0 1-7.922-8.982 6 6 0 0 1 8.982 7.922l3.04 3.04a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215ZM11.5 7a4.499 4.499 0 1 0-8.997 0A4.499 4.499 0 0 0 11.5 7Z" />
+                    </svg>
+                    Explorer
+                </a>
+                <a href="#" class="nav-link" data-page="projects">
+                    <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor">
+                        <path
+                            d="M1.75 1A1.75 1.75 0 0 0 0 2.75v10.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0 0 16 13.25v-8.5A1.75 1.75 0 0 0 14.25 3H7.5a.25.25 0 0 1-.2-.1l-.9-1.2C6.07 1.26 5.55 1 5 1H1.75Z" />
+                    </svg>
+                    Projets
+                </a>
+                <a href="#" class="nav-link user-only" data-page="create" style="display:none;">
+                    <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor">
+                        <path
+                            d="M7.75 2a.75.75 0 0 1 .75.75V7h4.25a.75.75 0 0 1 0 1.5H8.5v4.25a.75.75 0 0 1-1.5 0V8.5H2.75a.75.75 0 0 1 0-1.5H7V2.75A.75.75 0 0 1 7.75 2Z" />
+                    </svg>
+                    Créer
+                </a>
+            </div>
+            <div class="nav-right">
+                <button class="theme-toggle" id="themeToggle" title="Mode clair">
+                    <svg viewBox="0 0 16 16" fill="currentColor" width="18" height="18">
+                        <path
+                            d="M8 12a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm0-1.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Zm5.657-8.157a.75.75 0 0 1 0 1.061l-1.061 1.06a.749.749 0 0 1-1.275-.326.749.749 0 0 1 .215-.734l1.06-1.06a.75.75 0 0 1 1.06 0Zm-9.193 9.193a.75.75 0 0 1 0 1.06l-1.06 1.061a.75.75 0 1 1-1.061-1.06l1.06-1.061a.75.75 0 0 1 1.061 0ZM8 0a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0V.75A.75.75 0 0 1 8 0ZM3 8a.75.75 0 0 1-.75.75H.75a.75.75 0 0 1 0-1.5h1.5A.75.75 0 0 1 3 8Zm13 0a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 1 0-1.5h1.5A.75.75 0 0 1 16 8Zm-8 5a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 8 13Zm3.536-1.464a.75.75 0 0 1 1.06 0l1.061 1.06a.75.75 0 0 1-1.06 1.061l-1.061-1.06a.75.75 0 0 1 0-1.061Zm-9.193-9.193a.75.75 0 0 1 1.06 0l1.061 1.06a.75.75 0 0 1-1.06 1.061l-1.061-1.06a.75.75 0 0 1 0-1.061Z" />
+                    </svg>
+                </button>
+                <div class="nav-auth" id="navAuth">
+                    <button class="btn btn-secondary" id="loginBtn">Connexion</button>
+                    <button class="btn btn-primary" id="registerBtn">Inscription</button>
+                </div>
+                <div class="nav-user" id="navUser" style="display:none;">
+                    <div class="user-dropdown">
+                        <button class="user-btn" id="userMenuBtn">
+                            <div class="user-avatar" id="userAvatar">U</div>
+                            <span class="user-name" id="userName">User</span>
+                            <svg class="dropdown-arrow" viewBox="0 0 16 16" fill="currentColor">
+                                <path
+                                    d="m4.427 7.427 3.396 3.396a.25.25 0 0 0 .354 0l3.396-3.396A.25.25 0 0 0 11.396 7H4.604a.25.25 0 0 0-.177.427Z" />
+                            </svg>
+                        </button>
+                        <div class="dropdown-menu" id="userDropdown">
+                            <a href="#" class="dropdown-item" data-page="profile">
+                                <svg viewBox="0 0 16 16" fill="currentColor">
+                                    <path
+                                        d="M10.561 8.073a6.005 6.005 0 0 1 3.432 5.142.75.75 0 1 1-1.498.07 4.5 4.5 0 0 0-8.99 0 .75.75 0 0 1-1.498-.07 6.004 6.004 0 0 1 3.431-5.142 3.999 3.999 0 1 1 5.123 0ZM10.5 5a2.5 2.5 0 1 0-5 0 2.5 2.5 0 0 0 5 0Z" />
+                                </svg>
+                                Mon profil
+                            </a>
+                            <a href="#" class="dropdown-item" data-page="my-posts">
+                                <svg viewBox="0 0 16 16" fill="currentColor">
+                                    <path
+                                        d="M0 1.75A.75.75 0 0 1 .75 1h4.253c1.227 0 2.317.59 3 1.501A3.743 3.743 0 0 1 11.006 1h4.245a.75.75 0 0 1 .75.75v10.5a.75.75 0 0 1-.75.75h-4.507a2.25 2.25 0 0 0-1.591.659l-.622.621a.75.75 0 0 1-1.06 0l-.622-.621A2.25 2.25 0 0 0 5.258 13H.75a.75.75 0 0 1-.75-.75Zm8.755 3a2.25 2.25 0 0 0-2.25-2.25H1.5v9h3.757a3.75 3.75 0 0 1 1.498.31V4.75Zm1.5 0v7.56a3.75 3.75 0 0 1 1.498-.31H14.5v-9h-5.005a2.25 2.25 0 0 0-2.25 2.25v.5Z" />
+                                </svg>
+                                Mes posts
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item admin-only" data-page="admin" style="display:none;">
+                                <svg viewBox="0 0 16 16" fill="currentColor">
+                                    <path
+                                        d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z" />
+                                </svg>
+                                Admin Panel
+                            </a>
+                            <a href="#" class="dropdown-item text-danger" id="logoutBtn">
+                                <svg viewBox="0 0 16 16" fill="currentColor">
+                                    <path
+                                        d="M2 2.75C2 1.784 2.784 1 3.75 1h2.5a.75.75 0 0 1 0 1.5h-2.5a.25.25 0 0 0-.25.25v10.5c0 .138.112.25.25.25h2.5a.75.75 0 0 1 0 1.5h-2.5A1.75 1.75 0 0 1 2 13.25Zm10.44 4.5-1.97-1.97a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l3.25 3.25a.75.75 0 0 1 0 1.06l-3.25 3.25a.749.749 0 0 1-1.275-.326.749.749 0 0 1 .215-.734l1.97-1.97H6.75a.75.75 0 0 1 0-1.5Z" />
+                                </svg>
+                                Déconnexion
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <section id="homePage" class="page active">
+            <div class="hero">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        <span class="gradient-text">DataBot</span>
+                        <br>Partagez vos Bots Discord
+                    </h1>
+                    <p class="hero-subtitle">La plateforme de partage de code pour bots Discord. Créée par et pour la
+                        communauté.</p>
+                    <div class="hero-actions">
+                        <button class="btn btn-primary btn-lg" id="heroExploreBtn">
+                            <svg viewBox="0 0 16 16" fill="currentColor">
+                                <path
+                                    d="M10.68 11.74a6 6 0 0 1-7.922-8.982 6 6 0 0 1 8.982 7.922l3.04 3.04a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215ZM11.5 7a4.499 4.499 0 1 0-8.997 0A4.499 4.499 0 0 0 11.5 7Z" />
+                            </svg>
+                            Explorer les Bots
+                        </button>
+                        <button class="btn btn-secondary btn-lg" id="heroRegisterBtn">Créer un compte</button>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="code-preview">
+                        <div class="code-header">
+                            <span class="code-dot red"></span>
+                            <span class="code-dot yellow"></span>
+                            <span class="code-dot green"></span>
+                            <span class="code-title">bot.js</span>
+                        </div>
+                        <pre class="code-content"><code class="language-javascript">const Discord = require('discord.js');
+const client = new Discord.Client({
+    intents: [
+        Discord.GatewayIntentBits.Guilds,
+        Discord.GatewayIntentBits.GuildMessages
+    ]
+});
+
+client.on('ready', () => {
+    console.log(`🤖 ${client.user.tag} est en ligne!`);
+});
+
+client.login(process.env.TOKEN);</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-section">
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-value" id="statUsers">0</div>
+                    <div class="stat-label">Utilisateurs</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🤖</div>
+                    <div class="stat-value" id="statBots">0</div>
+                    <div class="stat-label">Bots partagés</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💻</div>
+                    <div class="stat-value" id="statDevs">0</div>
+                    <div class="stat-label">Développeurs</div>
+                </div>
+            </div>
+
+            <div class="recent-section">
+                <h2 class="section-title">Bots Récents</h2>
+                <div class="posts-grid" id="recentPosts">
+                </div>
+            </div>
+        </section>
+
+        <section id="explorePage" class="page">
+            <div class="page-header">
+                <h1>Explorer les Bots</h1>
+                <div class="search-bar">
+                    <svg class="search-icon" viewBox="0 0 16 16" fill="currentColor">
+                        <path
+                            d="M10.68 11.74a6 6 0 0 1-7.922-8.982 6 6 0 0 1 8.982 7.922l3.04 3.04a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215ZM11.5 7a4.499 4.499 0 1 0-8.997 0A4.499 4.499 0 0 0 11.5 7Z" />
+                    </svg>
+                    <input type="text" id="searchInput" placeholder="Rechercher un bot...">
+                </div>
+            </div>
+            <div class="filter-bar">
+                <button class="filter-btn active" data-filter="all">Tous</button>
+                <button class="filter-btn" data-filter="javascript">JavaScript</button>
+                <button class="filter-btn" data-filter="python">Python</button>
+                <button class="filter-btn" data-filter="typescript">TypeScript</button>
+            </div>
+            <div class="posts-grid" id="allPosts">
+            </div>
+        </section>
+
+        <section id="projectsPage" class="page">
+            <div class="page-header">
+                <div class="page-header-row">
+                    <div>
+                        <h1>📁 Projets</h1>
+                        <p class="page-subtitle">Regroupez vos bots dans des projets</p>
+                    </div>
+                    <button class="btn btn-primary user-only" id="newProjectBtn" style="display:none;"
+                        onclick="App.navigateTo('createProject')">
+                        <svg viewBox="0 0 16 16" fill="currentColor">
+                            <path
+                                d="M7.75 2a.75.75 0 0 1 .75.75V7h4.25a.75.75 0 0 1 0 1.5H8.5v4.25a.75.75 0 0 1-1.5 0V8.5H2.75a.75.75 0 0 1 0-1.5H7V2.75A.75.75 0 0 1 7.75 2Z" />
+                        </svg>
+                        Nouveau Projet
+                    </button>
+                </div>
+            </div>
+            <div class="projects-grid" id="projectsList">
+            </div>
+        </section>
+
+        <section id="createProjectPage" class="page">
+            <div class="page-header">
+                <h1>Créer un Projet</h1>
+                <p class="page-subtitle">Regroupez plusieurs bots dans un projet</p>
+            </div>
+            <form class="create-form" id="createProjectForm">
+                <div class="form-group">
+                    <label for="projectName">Nom du Projet *</label>
+                    <input type="text" id="projectName" placeholder="Ex: Bot de Modération Complet" required>
+                </div>
+                <div class="form-group">
+                    <label for="projectDescription">Description</label>
+                    <textarea id="projectDescription" rows="3" placeholder="Décrivez votre projet..."></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelCreateProject">Annuler</button>
+                    <button type="submit" class="btn btn-primary">
+                        <svg viewBox="0 0 16 16" fill="currentColor">
+                            <path
+                                d="M7.75 2a.75.75 0 0 1 .75.75V7h4.25a.75.75 0 0 1 0 1.5H8.5v4.25a.75.75 0 0 1-1.5 0V8.5H2.75a.75.75 0 0 1 0-1.5H7V2.75A.75.75 0 0 1 7.75 2Z" />
+                        </svg>
+                        Créer le Projet
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <section id="projectDetailPage" class="page">
+            <div class="post-detail-header">
+                <button class="btn btn-secondary btn-back" id="backToProjects">
+                    <svg viewBox="0 0 16 16" fill="currentColor">
+                        <path
+                            d="M7.78 12.53a.75.75 0 0 1-1.06 0L2.47 8.28a.75.75 0 0 1 0-1.06l4.25-4.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042L4.81 7h7.44a.75.75 0 0 1 0 1.5H4.81l2.97 2.97a.75.75 0 0 1 0 1.06Z" />
+                    </svg>
+                    Projets
+                </button>
+            </div>
+            <div id="projectDetailContent">
+            </div>
+        </section>
+
+        <section id="createPage" class="page">
+            <div class="page-header">
+                <h1>Créer un nouveau Bot</h1>
+                <p class="page-subtitle">Partagez votre bot avec la communauté</p>
+            </div>
+            <form class="create-form" id="createForm">
+                <div class="form-group">
+                    <label for="botName">Nom du Bot *</label>
+                    <input type="text" id="botName" placeholder="Ex: ModBot" required>
+                </div>
+                <div class="form-group">
+                    <label for="botDescription">Description *</label>
+                    <textarea id="botDescription" rows="3" placeholder="Décrivez ce que fait votre bot..."
+                        required></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="botLanguage">Langage Principal *</label>
+                        <select id="botLanguage" required>
+                            <option value="javascript">JavaScript</option>
+                            <option value="python">Python</option>
+                            <option value="typescript">TypeScript</option>
+                            <option value="java">Java</option>
+                            <option value="csharp">C#</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="botVersion">Version</label>
+                        <input type="text" id="botVersion" placeholder="Ex: 1.0.0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="botFeatures">Fonctionnalités</label>
+                    <textarea id="botFeatures" rows="3"
+                        placeholder="Liste des fonctionnalités principales..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Fichiers du Bot *</label>
+
+                    <div class="upload-method-tabs">
+                        <button type="button" class="upload-method-tab active" data-method="import">
+                            <svg viewBox="0 0 16 16" fill="currentColor">
+                                <path
+                                    d="M2.75 14A1.75 1.75 0 0 1 1 12.25v-2.5a.75.75 0 0 1 1.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-2.5a.75.75 0 0 1 1.5 0v2.5A1.75 1.75 0 0 1 13.25 14Z" />
+                                <path
+                                    d="M11.78 4.72a.749.749 0 1 1-1.06 1.06L8.75 3.811V9.5a.75.75 0 0 1-1.5 0V3.811L5.28 5.78a.749.749 0 1 1-1.06-1.06l3.25-3.25a.749.749 0 0 1 1.06 0l3.25 3.25Z" />
+                            </svg>
+                            Importer des fichiers
+                        </button>
+                        <button type="button" class="upload-method-tab" data-method="paste">
+                            <svg viewBox="0 0 16 16" fill="currentColor">
+                                <path
+                                    d="M5.75 1a.75.75 0 0 0-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-3a.75.75 0 0 0-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 0 0-.752-1.298A1.75 1.75 0 0 0 2 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0 0 14 13.25v-9.5a1.75 1.75 0 0 0-.874-1.515.75.75 0 1 0-.752 1.298.25.25 0 0 1 .126.217v9.5a.25.25 0 0 1-.25.25h-8.5a.25.25 0 0 1-.25-.25v-9.5a.25.25 0 0 1 .126-.217z" />
+                            </svg>
+                            Coller du code
+                        </button>
+                    </div>
+
+                    <div class="upload-method-content active" id="importMethod">
+                        <div class="upload-zone" id="uploadZone">
+                            <svg class="upload-icon" viewBox="0 0 16 16" fill="currentColor">
+                                <path
+                                    d="M3.75 1.5a.25.25 0 0 0-.25.25v11.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25V6H9.75A1.75 1.75 0 0 1 8 4.25V1.5Zm5.75.56v2.19c0 .138.112.25.25.25h2.19L9.5 2.06ZM2 1.75C2 .784 2.784 0 3.75 0h5.086c.464 0 .909.184 1.237.513l3.414 3.414c.329.328.513.773.513 1.237v8.086A1.75 1.75 0 0 1 12.25 15h-8.5A1.75 1.75 0 0 1 2 13.25Z" />
+                            </svg>
+                            <p class="upload-text">Glissez-déposez vos fichiers ou dossiers ici</p>
+
+                            <div class="upload-buttons"
+                                style="display: flex; gap: 10px; justify-content: center; margin-top: 10px;">
+                                <button type="button" class="btn btn-secondary btn-sm"
+                                    onclick="document.getElementById('fileInput').click()">
+                                    Choisir fichier(s)
+                                </button>
+                                <button type="button" class="btn btn-secondary btn-sm"
+                                    onclick="document.getElementById('folderInput').click()">
+                                    Choisir dossier
+                                </button>
+                            </div>
+
+                            <p class="upload-formats">.js, .py, .ts, .json, .md, .env, .yml, .html, .css...</p>
+
+                            <input type="file" id="fileInput" multiple
+                                accept=".js,.py,.ts,.json,.txt,.md,.env,.yml,.yaml,.jsx,.tsx,.css,.html" hidden>
+
+                            <input type="file" id="folderInput" webkitdirectory directory multiple hidden>
+                        </div>
+                    </div>
+
+                    <div class="upload-method-content" id="pasteMethod">
+                        <div class="paste-file-form">
+                            <div class="paste-row">
+                                <input type="text" id="pasteFileName"
+                                    placeholder="Nom du fichier (ex: index.js, config.json)" class="paste-filename">
+                                <button type="button" class="btn btn-primary" id="addPasteFile">
+                                    <svg viewBox="0 0 16 16" fill="currentColor">
+                                        <path
+                                            d="M7.75 2a.75.75 0 0 1 .75.75V7h4.25a.75.75 0 0 1 0 1.5H8.5v4.25a.75.75 0 0 1-1.5 0V8.5H2.75a.75.75 0 0 1 0-1.5H7V2.75A.75.75 0 0 1 7.75 2Z" />
+                                    </svg>
+                                    Ajouter
+                                </button>
+                            </div>
+                            <textarea id="pasteFileContent" rows="12" placeholder="Collez votre code ici..."
+                                class="paste-code"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="files-list" id="filesList">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="allowFork" checked>
+                        <span class="checkbox-text">Autoriser les autres à forker ce bot</span>
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label for="botInvite">Lien d'invitation (optionnel)</label>
+                    <input type="url" id="botInvite" placeholder="https://discord.com/api/oauth2/authorize?...">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelCreate">Annuler</button>
+                    <button type="submit" class="btn btn-primary">
+                        <svg viewBox="0 0 16 16" fill="currentColor">
+                            <path
+                                d="M7.75 2a.75.75 0 0 1 .75.75V7h4.25a.75.75 0 0 1 0 1.5H8.5v4.25a.75.75 0 0 1-1.5 0V8.5H2.75a.75.75 0 0 1 0-1.5H7V2.75A.75.75 0 0 1 7.75 2Z" />
+                        </svg>
+                        Publier le Bot
+                    </button>
+                </div>
+            </form>
+        </section>
+
+
+        <section id="profilePage" class="page">
+            <div class="profile-header">
+                <div class="profile-avatar" id="profileAvatar">U</div>
+                <div class="profile-info">
+                    <h1 id="profileName">Username</h1>
+                    <span class="role-badge" id="profileRole">Reader</span>
+                    <p class="profile-bio" id="profileBio">Aucune bio</p>
+                    <div class="profile-links" id="profileLinks">
+                    </div>
+                    <p class="profile-meta">Membre depuis <span id="profileDate">-</span></p>
+                    <button class="btn btn-secondary btn-sm" id="editProfileBtn" style="margin-top: 12px;">
+                        <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14">
+                            <path
+                                d="M11.013 1.427a1.75 1.75 0 0 1 2.474 0l1.086 1.086a1.75 1.75 0 0 1 0 2.474l-8.61 8.61c-.21.21-.47.364-.756.445l-3.251.93a.75.75 0 0 1-.927-.928l.929-3.25c.081-.286.235-.547.445-.758l8.61-8.61Zm.176 4.823L9.75 4.81l-6.286 6.287a.253.253 0 0 0-.064.108l-.558 1.953 1.953-.558a.253.253 0 0 0 .108-.064Zm1.238-3.763a.25.25 0 0 0-.354 0L10.811 3.75l1.439 1.44 1.263-1.263a.25.25 0 0 0 0-.354Z" />
+                        </svg>
+                        Modifier le profil
+                    </button>
+                </div>
+            </div>
+            <div class="profile-stats">
+                <div class="profile-stat">
+                    <span class="stat-num" id="profilePosts">0</span>
+                    <span class="stat-text">Posts</span>
+                </div>
+                <div class="profile-stat">
+                    <span class="stat-num" id="profileLikes">0</span>
+                    <span class="stat-text">Likes reçus</span>
+                </div>
+                <div class="profile-stat">
+                    <span class="stat-num" id="profileViews">0</span>
+                    <span class="stat-text">Vues totales</span>
+                </div>
+            </div>
+
+            <div class="profile-edit-form" id="profileEditForm" style="display: none;">
+                <h2>Modifier le profil</h2>
+                <div class="form-group">
+                    <label for="editBio">Bio</label>
+                    <textarea id="editBio" rows="3" placeholder="Parlez de vous..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="editGithub">GitHub</label>
+                    <input type="text" id="editGithub" placeholder="Votre pseudo GitHub">
+                </div>
+                <div class="form-group">
+                    <label for="editDiscord">Discord</label>
+                    <input type="text" id="editDiscord" placeholder="Votre pseudo#1234">
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-secondary" id="cancelEditProfile">Annuler</button>
+                    <button class="btn btn-primary" id="saveEditProfile">Enregistrer</button>
+                </div>
+            </div>
+
+            <div class="profile-section">
+                <h2>Mes Posts</h2>
+                <div class="posts-grid" id="userPosts">
+                </div>
+            </div>
+        </section>
+
+        <section id="myPostsPage" class="page">
+            <div class="page-header">
+                <h1>Mes Posts</h1>
+            </div>
+            <div class="posts-grid" id="myPostsList">
+            </div>
+        </section>
+
+        <section id="adminPage" class="page">
+            <div class="page-header">
+                <h1>🛡️ Panel Administration</h1>
+                <p class="page-subtitle">Gérez les utilisateurs et les permissions</p>
+            </div>
+
+            <div class="admin-tabs">
+                <button class="admin-tab active" data-tab="users">
+                    <svg viewBox="0 0 16 16" fill="currentColor">
+                        <path
+                            d="M2 5.5a3.5 3.5 0 1 1 5.898 2.549 5.508 5.508 0 0 1 3.034 4.084.75.75 0 1 1-1.482.235 4 4 0 0 0-7.9 0 .75.75 0 0 1-1.482-.236A5.507 5.507 0 0 1 3.102 8.05 3.493 3.493 0 0 1 2 5.5ZM11 4a3.001 3.001 0 0 1 2.22 5.018 5.01 5.01 0 0 1 2.56 3.012.749.749 0 0 1-.885.954.752.752 0 0 1-.549-.514 3.507 3.507 0 0 0-2.522-2.372.75.75 0 0 1-.574-.73v-.352a.75.75 0 0 1 .416-.672A1.5 1.5 0 0 0 11 5.5.75.75 0 0 1 11 4Zm-5.5-.5a2 2 0 1 0-.001 3.999A2 2 0 0 0 5.5 3.5Z" />
+                    </svg>
+                    Utilisateurs
+                </button>
+                <button class="admin-tab" data-tab="posts">
+                    <svg viewBox="0 0 16 16" fill="currentColor">
+                        <path
+                            d="M0 1.75A.75.75 0 0 1 .75 1h4.253c1.227 0 2.317.59 3 1.501A3.743 3.743 0 0 1 11.006 1h4.245a.75.75 0 0 1 .75.75v10.5a.75.75 0 0 1-.75.75h-4.507a2.25 2.25 0 0 0-1.591.659l-.622.621a.75.75 0 0 1-1.06 0l-.622-.621A2.25 2.25 0 0 0 5.258 13H.75a.75.75 0 0 1-.75-.75Z" />
+                    </svg>
+                    Posts
+                </button>
+                <button class="admin-tab" data-tab="stats">
+                    <svg viewBox="0 0 16 16" fill="currentColor">
+                        <path
+                            d="M1.5 1.75V13.5h13.75a.75.75 0 0 1 0 1.5H.75a.75.75 0 0 1-.75-.75V1.75a.75.75 0 0 1 1.5 0Zm14.28 2.53-5.25 5.25a.75.75 0 0 1-1.06 0L7 7.06 4.28 9.78a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042l3.25-3.25a.75.75 0 0 1 1.06 0L10 7.94l4.72-4.72a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042Z" />
+                    </svg>
+                    Statistiques
+                </button>
+            </div>
+
+            <div class="admin-content" id="usersTab">
+                <div class="admin-toolbar">
+                    <input type="text" id="adminSearchUser" placeholder="Rechercher un utilisateur..."
+                        class="admin-search">
+                </div>
+                <div class="users-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Utilisateur</th>
+                                <th>ID</th>
+                                <th>Rôle</th>
+                                <th>Inscrit le</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="admin-content hidden" id="postsTab">
+                <div class="admin-toolbar">
+                    <input type="text" id="adminSearchPost" placeholder="Rechercher un post..." class="admin-search">
+                </div>
+                <div class="posts-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Bot</th>
+                                <th>Auteur</th>
+                                <th>Langage</th>
+                                <th>Créé le</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="postsTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="admin-content hidden" id="statsTab">
+                <div class="admin-stats-grid">
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-icon">👥</div>
+                        <div class="admin-stat-info">
+                            <span class="admin-stat-value" id="adminStatUsers">0</span>
+                            <span class="admin-stat-label">Total Utilisateurs</span>
+                        </div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-icon">🤖</div>
+                        <div class="admin-stat-info">
+                            <span class="admin-stat-value" id="adminStatPosts">0</span>
+                            <span class="admin-stat-label">Total Posts</span>
+                        </div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-icon">💻</div>
+                        <div class="admin-stat-info">
+                            <span class="admin-stat-value" id="adminStatDevs">0</span>
+                            <span class="admin-stat-label">Développeurs</span>
+                        </div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-icon">👑</div>
+                        <div class="admin-stat-info">
+                            <span class="admin-stat-value" id="adminStatStaff">0</span>
+                            <span class="admin-stat-label">Staff</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="admin-roles-breakdown">
+                    <h3>Répartition des Rôles</h3>
+                    <div id="rolesChart"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="postDetailPage" class="page">
+            <div class="post-detail-header">
+                <button class="btn btn-secondary btn-back" id="backToExplore">
+                    <svg viewBox="0 0 16 16" fill="currentColor">
+                        <path
+                            d="M7.78 12.53a.75.75 0 0 1-1.06 0L2.47 8.28a.75.75 0 0 1 0-1.06l4.25-4.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042L4.81 7h7.44a.75.75 0 0 1 0 1.5H4.81l2.97 2.97a.75.75 0 0 1 0 1.06Z" />
+                    </svg>
+                    Retour
+                </button>
+            </div>
+            <div class="post-detail-content" id="postDetailContent">
+            </div>
+        </section>
+    </main>
+
+    <div class="modal" id="loginModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Connexion</h2>
+                <button class="modal-close" data-close="loginModal">&times;</button>
+            </div>
+            <form class="modal-form" id="loginForm">
+                <div class="form-group">
+                    <label for="loginId">Email / Identifiant</label>
+                    <input type="text" id="loginId" placeholder="Votre email ou ID" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Mot de passe</label>
+                    <input type="password" id="loginPassword" placeholder="Votre mot de passe" required>
+                </div>
+                <div class="form-error" id="loginError"></div>
+                <button type="submit" class="btn btn-primary btn-full">Se connecter</button>
+            </form>
+            <div class="modal-footer">
+                <p>Pas encore de compte ? <a href="#" id="switchToRegister">Inscrivez-vous</a></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="registerModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Inscription</h2>
+                <button class="modal-close" data-close="registerModal">&times;</button>
+            </div>
+            <form class="modal-form" id="registerForm">
+                <div class="form-group">
+                    <label for="registerUsername">Nom d'utilisateur</label>
+                    <input type="text" id="registerUsername" placeholder="Choisissez un pseudo" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerId">Email</label>
+                    <input type="email" id="registerId" placeholder="votre@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Mot de passe</label>
+                    <input type="password" id="registerPassword" placeholder="Minimum 6 caractères" required
+                        minlength="6">
+                </div>
+                <div class="form-group">
+                    <label for="registerConfirm">Confirmer le mot de passe</label>
+                    <input type="password" id="registerConfirm" placeholder="Confirmez votre mot de passe" required>
+                </div>
+                <div class="form-error" id="registerError"></div>
+                <button type="submit" class="btn btn-primary btn-full">S'inscrire</button>
+            </form>
+            <div class="modal-footer">
+                <p>Déjà inscrit ? <a href="#" id="switchToLogin">Connectez-vous</a></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="editProfileModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Modifier le Profil</h2>
+                <button class="modal-close" data-close="editProfileModal">&times;</button>
+            </div>
+            <form class="modal-form" id="editProfileForm">
+                <div class="form-group">
+                    <label>Bio</label>
+                    <textarea id="editProfileBio" rows="3" placeholder="Parlez-nous de vous..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Lien GitHub</label>
+                    <input type="url" id="editProfileGithub" placeholder="https://github.com/votre-profil">
+                </div>
+                <div class="form-group">
+                    <label>Discord Username</label>
+                    <input type="text" id="editProfileDiscord" placeholder="Ex: User#1234">
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Enregistrer</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="roleModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Modifier le Rôle</h2>
+                <button class="modal-close" data-close="roleModal">&times;</button>
+            </div>
+            <form class="modal-form" id="roleForm">
+                <div class="form-group">
+                    <label>Utilisateur</label>
+                    <input type="text" id="roleUsername" readonly>
+                    <input type="hidden" id="roleUserId">
+                </div>
+                <div class="form-group">
+                    <label for="roleSelect">Nouveau Rôle</label>
+                    <select id="roleSelect" required>
+                        <option value="reader">Reader - Lecture seule</option>
+                        <option value="dev">Dev - Peut créer des posts</option>
+                        <option value="staff">Staff - Assistance modération</option>
+                        <option value="moderator">Moderator - Modération</option>
+                        <option value="coowner">Co-Owner - Gestion avancée</option>
+                        <option value="owner">Owner - Gestion complète</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Enregistrer</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="addBotModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Ajouter un Bot</h2>
+                <button class="modal-close" data-close="addBotModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-subtitle">Sélectionnez un bot à ajouter au projet</p>
+                <div id="availableBotsList" class="available-bots-list">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="deployModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h2>Déployer le Bot</h2>
+                <button class="modal-close" data-close="deployModal">&times;</button>
+            </div>
+            <div id="deployModalContent">
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="data.js"></script>
+    <script src="supabase.js"></script>
+    <script src="auth.js"></script>
+    <script src="posts.js"></script>
+    <script src="projects.js"></script>
+    <script src="hosting.js"></script>
+    <script src="stats.js"></script>
+    <script src="profile.js"></script>
+    <script src="theme.js"></script>
+    <script src="admin.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
